@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FastFood.Data.Migrations
+namespace FastFood.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241209120013_InitialSetup")]
-    partial class InitialSetup
+    [Migration("20241209180747_AlteredSubCategories")]
+    partial class AlteredSubCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,7 @@ namespace FastFood.Data.Migrations
                     b.Property<double>("MinimumAmount")
                         .HasColumnType("float");
 
-                    b.Property<string>("Ttile")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -192,9 +192,6 @@ namespace FastFood.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -210,8 +207,6 @@ namespace FastFood.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("SubCategoryId");
 
@@ -496,19 +491,11 @@ namespace FastFood.Data.Migrations
 
             modelBuilder.Entity("FastFood.Models.Item", b =>
                 {
-                    b.HasOne("FastFood.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FastFood.Models.SubCategory", "SubCategory")
                         .WithMany()
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("SubCategory");
                 });

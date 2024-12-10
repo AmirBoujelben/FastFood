@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FastFood.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FastFood.Data
 {
-    public class DbInitializer
+    public static class DbInitializer
     {
         public static async Task SeedDataAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(); // Use ApplicationUser here
 
             // Seed roles
             var roles = new[] { "Admin", "Manager", "Customer" };
@@ -21,22 +22,24 @@ namespace FastFood.Data
             }
 
             // Seed default admin user
-            var defaultUserEmail = "admin@gmail.com";
-            var defaultUser = await userManager.FindByEmailAsync(defaultUserEmail);
-            if (defaultUser == null)
+            var adminEmail = "admin@gmail.com";
+            if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
-                var user = new IdentityUser
+                var adminUser = new ApplicationUser
                 {
-                    UserName = defaultUserEmail,
-                    Email = defaultUserEmail,
+                    UserName = adminEmail,
+                    Email = adminEmail,
                     EmailConfirmed = true,
+                    Name= "Admin Name",
+                    Address = "Default Admin Address",
+                    City = "Default Admin City",
+                    PostalCode = "Default Admin Postal Code"
                 };
 
-                // Create user and assign the "Admin" role
-                var result = await userManager.CreateAsync(user, "Admin@123");
+                var result = await userManager.CreateAsync(adminUser, "Admin@123");
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
             }
         }

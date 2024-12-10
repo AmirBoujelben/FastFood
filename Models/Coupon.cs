@@ -6,7 +6,7 @@ namespace FastFood.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Ttile { get; set; }
+        public string Title { get; set; }
         public string Type { get; set; }
         public double Discount { get; set; }
         public double MinimumAmount { get; set; }

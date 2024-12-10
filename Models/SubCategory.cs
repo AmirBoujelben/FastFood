@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace FastFood.Models
 {
@@ -8,7 +9,7 @@ namespace FastFood.Models
         public int Id { get; set; }
         public required string Title {  get; set; }
         public int CategoryId {  get; set; }
+        [ValidateNever]
         public Category Category { get; set; }
-        public ICollection<Item> Items { get; set; }
     }
 }
