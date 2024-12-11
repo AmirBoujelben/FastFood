@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace FastFood.Models
@@ -8,6 +9,7 @@ namespace FastFood.Models
         [Key]
         public int Id { get; set; }
         public string ApplicationUserId { get; set; }
+        [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         [DataType(DataType.Date)]
         public DateTime OrderDate { get; set; }

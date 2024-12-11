@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using FastFood.Data;
 using FastFood.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace FastFood.Controllers
         }
         public async Task<IActionResult> Details(int Id)
         {
-            var itemFromDb = await _context.Items.Include(i => i.SubCategory).Where(x => x.Id == Id).FirstOrDefaultAsync();
+            var itemFromDb = await _context.Items.Include(i => i.SubCategory).Where(x=>x.Id==Id).FirstOrDefaultAsync();
             var cart = new Cart()
             {
                 Item = itemFromDb,
@@ -34,6 +35,43 @@ namespace FastFood.Controllers
             };
             return View(cart);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Details(Cart cart)
+        {
+            // Retrieve the logged-in user's ID
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            cart.ApplicationUserId = claim.Value;
+
+            // Check if the model state is valid
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogError(error.ErrorMessage);
+                }
+                return RedirectToAction("Details", new { id = cart.ItemId });
+            }
+
+            // Check if the cart item already exists for the user
+            var cartFromDb = await _context.Carts
+                .FirstOrDefaultAsync(x => x.ApplicationUserId == cart.ApplicationUserId && x.ItemId == cart.ItemId);
+
+            if (cartFromDb == null)
+            {
+                // Add a new cart item if it doesn't exist
+                cart.Id = 0;
+                _context.Carts.Add(cart);  // No need to set the Id manually
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Update the quantity if the item already exists in the cart
+                cartFromDb.Count += cart.Count;
+                await _context.SaveChangesAsync();
+            }
 
         public IActionResult Privacy()
         {

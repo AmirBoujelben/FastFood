@@ -2,57 +2,40 @@
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Title with custom style -->
-<h1 class="text-center mb-4" style="font-size: 2.5rem; font-weight: 600;  margin-top: 100px;">Product Details</h1>
+<h1>Product Details</h1>
 
-<div class="container" style="max-width: 900px ; margin-top: 50px;">
-    <!-- Container size reduced -->
+<form asp-action="Details" method="post">
     <div class="row">
-        <!-- Image Section -->
-        <div class="col-md-4">
-            <img src="/images/default-placeholder.png" alt="Product Image" class="img-fluid rounded">
-        </div>
-
-        <!-- Product Information Section -->
-        <div class="col-md-8">
-            <h4>@Model.Item.Title</h4>
-            <p class="lead">@Model.Item.Description</p>
-
-            <hr />
-
-            <dl class="row">
-                <dt class="col-sm-4">
-                    Price
-                </dt>
-                <dd class="col-sm-8">
-                    $@Model.Item.Price.ToString("F2")
-                </dd>
-
-                <dt class="col-sm-4">
-                    Quantity
-                </dt>
-                <dd class="col-sm-8">
-                    <form asp-action="UpdateQuantity" method="post">
-                        <div class="input-group">
-                            <input type="number" name="count" class="form-control" value="@Model.Count" min="1" />
-                            <button type="submit" class="btn btn-primary">Update Quantity</button>
-                        </div>
-                        <input type="hidden" name="id" value="@Model.Id" />
-                    </form>
-                </dd>
-            </dl>
-
-            <hr />
-
-            <div class="d-flex justify-content-between">
-                <a asp-action="AddToCart" asp-route-id="@Model?.Id" class="btn btn-success">
-                    <i class="bi bi-cart-plus"></i> Add To Cart
-                </a>
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <!-- Product Name -->
+        <div class="col-8">
+            <input type="hidden" name="ItemId" value="@Model.ItemId" />
+            <div class="row">
+                <label asp-for="Item.Title">Product Name: @Model.Item.Title</label>
+            </div>
+            <!-- Description -->
+            <div class="row">
+                <label asp-for="Item.Description">Item Description: @Html.Raw(Model.Item.Description)</label>
+            </div>
+            <!-- Price -->
+            <div class="row">
+                <label asp-for="Item.Price">Item Price: $@Model.Item.Price</label>
+            </div>
+            <!-- Category -->
+            <div class="row">
+                <label asp-for="Item.SubCategory">Item Category: @Model.Item.SubCategory?.Title</label>
+            </div>
+            <!-- Quantity -->
+            <div class="row">
+                <label>Quantity:</label>
+                <input type="number" asp-for="Count" class="form-control" value="@Model.Count" min="1" required />
             </div>
         </div>
     </div>
-</div>
+    <!-- Submit and Back Buttons -->
+    <div class="row mt-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
