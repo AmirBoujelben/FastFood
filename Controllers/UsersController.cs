@@ -2,6 +2,7 @@
 using FastFood.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Claims;
 
@@ -41,21 +42,48 @@ namespace FastFood.Controllers
         // POST: Users/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ApplicationUser user)
+        public async Task<IActionResult> Edit(string id, ApplicationUser user)
         {
-            if (!ModelState.IsValid)
-                return View(user);
+            if (id != user.Id)
+            {
+                return BadRequest("User ID mismatch.");
+            }
 
-            var userInDb = _context.ApplicationUsers.FirstOrDefault(u => u.Id == user.Id);
-            if (userInDb == null)
-                return NotFound();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Retrieve the existing user
+                    var existingUser = await _context.ApplicationUsers.FindAsync(id);
+                    if (existingUser == null)
+                    {
+                        return NotFound();
+                    }
 
-            userInDb.UserName = user.UserName;
-            userInDb.Email = user.Email;
-            // Add additional property updates as needed
+                    // Update only the editable fields
+                    existingUser.Name = user.Name;
+                    existingUser.Email = user.Email;
+                    existingUser.City = user.City;
+                    existingUser.Address = user.Address;
+                    existingUser.PostalCode = user.PostalCode;
 
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return View(user);
         }
 
         // GET: Users/Delete/{id}
@@ -83,6 +111,11 @@ namespace FastFood.Controllers
             _context.ApplicationUsers.Remove(user);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool UserExists(string id)
+        {
+            return _context.ApplicationUsers.Any(e => e.Id == id);
         }
     }
 }
