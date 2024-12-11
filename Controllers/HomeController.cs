@@ -23,6 +23,17 @@ namespace FastFood.Controllers
             var applicationDbContext = _context.Items.Include(i => i.SubCategory);
             return View(await applicationDbContext.ToListAsync());
         }
+        public async Task<IActionResult> Details(int Id)
+        {
+            var itemFromDb = await _context.Items.Include(i => i.SubCategory).Where(x => x.Id == Id).FirstOrDefaultAsync();
+            var cart = new Cart()
+            {
+                Item = itemFromDb,
+                ItemId = itemFromDb.Id,
+                Count = 1
+            };
+            return View(cart);
+        }
 
         public IActionResult Privacy()
         {
