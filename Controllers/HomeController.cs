@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using FastFood.Data;
 using FastFood.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,6 +73,10 @@ namespace FastFood.Controllers
                 cartFromDb.Count += cart.Count;
                 await _context.SaveChangesAsync();
             }
+
+            // Redirect to the Index page
+            return RedirectToAction("Index");
+        }
 
         public IActionResult Privacy()
         {
