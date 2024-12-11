@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FastFood.Data;
 using FastFood.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FastFood.Controllers
 {
+    [Authorize]
     public class CartsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,11 +23,22 @@ namespace FastFood.Controllers
         }
 
         // GET: Carts
+        // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Carts.Include(c => c.ApplicationUser).Include(c => c.Item);
+            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var currentUserId = claim.Value; // Get the current authenticated user's username (you can adjust this if you are using a different property for identification)
+
+            // Filter carts to display only those belonging to the current user
+            var applicationDbContext = _context.Carts
+                .Where(c => c.ApplicationUserId == currentUserId) // Filter by the current user's ID
+                .Include(c => c.ApplicationUser)
+                .Include(c => c.Item);
+
             return View(await applicationDbContext.ToListAsync());
         }
+
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
