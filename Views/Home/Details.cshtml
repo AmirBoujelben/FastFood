@@ -1,41 +1,142 @@
 ﻿@model FastFood.Models.Cart
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Product Details";
 }
 
-<h1>Product Details</h1>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
 
-<form asp-action="Details" method="post">
-    <div class="row">
-        <!-- Product Name -->
-        <div class="col-8">
-            <input type="hidden" name="ItemId" value="@Model.ItemId" />
-            <div class="row">
-                <label asp-for="Item.Title">Product Name: @Model.Item.Title</label>
-            </div>
-            <!-- Description -->
-            <div class="row">
-                <label asp-for="Item.Description">Item Description: @Html.Raw(Model.Item.Description)</label>
-            </div>
-            <!-- Price -->
-            <div class="row">
-                <label asp-for="Item.Price">Item Price: $@Model.Item.Price</label>
-            </div>
-            <!-- Category -->
-            <div class="row">
-                <label asp-for="Item.SubCategory">Item Category: @Model.Item.SubCategory?.Title</label>
-            </div>
-            <!-- Quantity -->
-            <div class="row">
-                <label>Quantity:</label>
-                <input type="number" asp-for="Count" class="form-control" value="@Model.Count" min="1" required />
-            </div>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4>Product Information</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Details" method="post">
+                <input type="hidden" name="ItemId" value="@Model.ItemId" />
+
+                <div class="row mb-3">
+                    <!-- Image Placeholder -->
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                        <img src="/images/default-placeholder.png" class="img-fluid rounded-circle" alt="Product Image" />
+                    </div>
+
+                    <!-- Product Name, Price, and Description -->
+                    <div class="col-10">
+                        <!-- First row with Product Name and Description -->
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                <label for="ItemTitle" class="form-label">Product Name:</label>
+                                <input type="text" class="form-control" id="ItemTitle" value="@Model.Item.Title" disabled />
+                            </div>
+                                <div class="row">
+                                    <label for="ItemPrice" class="form-label">Item Price:</label>
+                                    <input type="text" class="form-control" id="ItemPrice" value="$@Model.Item.Price" disabled />
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <label for="ItemDescription" class="form-label">Item Description:</label>
+                                <textarea class="form-control" id="ItemDescription" rows="4" disabled>@Html.Raw(Model.Item.Description)</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Second row with Item Price and continuation of Description -->
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <label for="ItemPrice" class="form-label">Item Price:</label>
+                                <input type="text" class="form-control" id="ItemPrice" value="$@Model.Item.Price" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row mb-3">
+                    <!-- Item Price and Category -->
+                    <div class="col-6">
+                        <label for="ItemPrice" class="form-label">Item Price:</label>
+                        <input type="text" class="form-control" id="ItemPrice" value="$@Model.Item.Price" disabled />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Quantity -->
+                    <div class="col-6">
+                        <label for="ItemQuantity" class="form-label">Quantity:</label>
+                        <input type="number" asp-for="Count" class="form-control" value="@Model.Count" min="1" required />
+                    </div>
+                </div>
+
+                <!-- Submit and Back Buttons -->
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
         </div>
     </div>
-    <!-- Submit and Back Buttons -->
-    <div class="row mt-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Fond gris clair */
+        color: #343a40; /* Texte gris foncé */
+    }
+
+    .card {
+        border-radius: 8px; /* Arrondir les coins de la carte */
+    }
+
+    .card-header {
+        font-weight: bold;
+        font-size: 1.25rem;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    /* Style de l'image */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Bordure arrondie pour l'image */
+    .rounded-circle {
+        border-radius: 50%;
+    }
+</style>

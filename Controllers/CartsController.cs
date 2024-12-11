@@ -180,5 +180,23 @@ namespace FastFood.Controllers
         {
             return _context.Carts.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateQuantity(int cartId, int newQuantity)
+        {
+            var cart = await _context.Carts.FindAsync(cartId);
+            if (cart == null || newQuantity < 1)
+            {
+                return NotFound();
+            }
+
+            cart.Count = newQuantity;
+            _context.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

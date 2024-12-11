@@ -20,30 +20,51 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- Toujours visible -->
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Visible uniquement pour Admin -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="SubCategories" asp-action="Index">Sub-Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Items" asp-action="Index">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Coupons" asp-action="Index">Coupons</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Customer"))
+                        {
+                        <!-- Visible uniquement pour Customer -->
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                            <a class="nav-link" asp-area="" asp-controller="Carts" asp-action="Index">Cart</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="SubCategories" asp-action="Index">Sub-Categories</a>
-                        </li>
+                        }
+                        @if (User.IsInRole("Manager"))
+                        {
+                        <!-- Visible uniquement pour Manager -->
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Items" asp-action="Index">Items</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Coupons" asp-action="Index">Coupons</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Carts" asp-action="Index">Carts</a>
-                        </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -56,32 +77,34 @@
             <div class="row">
                 <!-- Company Info -->
                 <div class="col-md-4 mb-0">
-                    <ul class="list-unstyled small mb-0" style="line-height: 1.4;"
-                    <li class="fw-bold mb-0">🍔 FastFood</li>
+                    <h6 class="fw-bold mb-1">🍔 FastFood</h6>
+                    <ul class="list-unstyled small mb-0 text-light " style="line-height: 1.2;"
                     <li class="small mb-0">
-                        Delicious meals, delivered fast.
-                        Thank you for choosing us!
+                        Delicious meals, delivered fast. Thank you for choosing us!
                     </li>
                     </ul>
                 </div>
 
                 <!-- Contact & Social -->
                 <div class="col-md-4 mb-0">
-                    <h6 class="fw-bold mb-2">Contact</h6>
+                    <h6 class="fw-bold mb-1">Contact</h6>
                     <ul class="list-unstyled small mb-0" style="line-height: 1.4;">
-                        <li class="small mb-0">📍 123 Tasty St, Paris, France</li>
-                        <li>
-                            📞
-                            <a href="tel:+33123456789" class=" small text-light text-decoration-none">
-                                +33 1 23 45 67 89
+                        <li class="small mb-0">
+                            📍 7 rue Monji Bali, Souuse, Tunisie 📞
+                            <a href="tel:+216 55 338 226" class=" small text-light text-decoration-none">
+                                +216 55 338 226
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <!-- Quick Link -->
-                <div class="col-md-4 text-md-end text-center">
-                    <small>&copy; 2024 FastFood. All rights reserved.</small>
+                <div class="col-md-4 mb-0 text-md-end text-center">
+                    <ul class="list-unstyled small mb-0 text-md-end text-center" style="line-height: 1.4;"
+                    </li class="small mb-0">
+                    &copy; 2024 FastFood. All rights reserved.
+                </li>
+                     </ul>
                 </div>
             </div>
         </div>
