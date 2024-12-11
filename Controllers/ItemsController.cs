@@ -15,10 +15,12 @@ namespace FastFood.Controllers
     public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment _webHostEnvironment;
 
-        public ItemsController(ApplicationDbContext context)
+        public ItemsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Items
@@ -59,10 +61,24 @@ namespace FastFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Price,SubCategoryId")] Item item)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Price,SubCategoryId")] Item item, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
+                if (imageFile != null)
+                {
+                    var uploadDir = @"images/";
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath,uploadDir, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    item.ImageUrl = "/" + uploadDir + "/" + fileName;
+                }
+
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -70,6 +86,7 @@ namespace FastFood.Controllers
             ViewData["SubCategoryId"] = new SelectList(_context.SubCategories, "Id", "Title", item.SubCategoryId);
             return View(item);
         }
+
 
         // GET: Items/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -93,7 +110,7 @@ namespace FastFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Price,SubCategoryId")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Price,SubCategoryId")] Item item, IFormFile imageFile)
         {
             if (id != item.Id)
             {
@@ -104,6 +121,20 @@ namespace FastFood.Controllers
             {
                 try
                 {
+                    if (imageFile != null)
+                    {
+                        var uploadDir = @"images/";
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, uploadDir, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        item.ImageUrl = "/" + uploadDir + "/" + fileName;
+                    }
+
                     _context.Update(item);
                     await _context.SaveChangesAsync();
                 }
@@ -123,6 +154,7 @@ namespace FastFood.Controllers
             ViewData["SubCategoryId"] = new SelectList(_context.SubCategories, "Id", "Title", item.SubCategoryId);
             return View(item);
         }
+
 
         // GET: Items/Delete/5
         public async Task<IActionResult> Delete(int? id)
