@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFood.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241209122903_InitialSetup")]
-    partial class InitialSetup
+    [Migration("20241211114000_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,7 @@ namespace FastFood.Migrations
                     b.Property<double>("MinimumAmount")
                         .HasColumnType("float");
 
-                    b.Property<string>("Ttile")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -492,7 +492,7 @@ namespace FastFood.Migrations
             modelBuilder.Entity("FastFood.Models.Item", b =>
                 {
                     b.HasOne("FastFood.Models.SubCategory", "SubCategory")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -590,11 +590,6 @@ namespace FastFood.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FastFood.Models.SubCategory", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
