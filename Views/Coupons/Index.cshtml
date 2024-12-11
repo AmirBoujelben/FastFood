@@ -34,22 +34,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinimumAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CouponPicture)
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinimumAmount)
+                </td>
+                <td>
+                    @{
+                        var base64 = Convert.ToBase64String(item.CouponPicture);
+                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                    }
+                    <img src="@imgsrc" height="50" width="50" style="border-radius:100%" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsActive)

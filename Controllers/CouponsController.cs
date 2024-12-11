@@ -67,30 +67,18 @@ namespace FastFood.Controllers
                     MinimumAmount = model.MinimumAmount,
                     IsActive = model.IsActive
                 };
-                if (model.CouponPicture != null)
-                {
-                    Console.WriteLine($"File Name: {model.CouponPicture.FileName}");
-                    Console.WriteLine($"File Length: {model.CouponPicture.Length}");
-                }
-                else
-                {
-                    Console.WriteLine("No file received.");
-                }
 
-                // Handle the uploaded file
-                if (model.CouponPicture != null && model.CouponPicture.Length > 0)
+                var files = Request.Form.Files;
+                byte[] photo = null;
+                using (var fileStream = files[0].OpenReadStream())
                 {
                     using (var memoryStream = new MemoryStream())
                     {
-                        await model.CouponPicture.CopyToAsync(memoryStream);
-                        coupon.CouponPicture = memoryStream.ToArray();
+                        fileStream.CopyTo(memoryStream);
+                        photo = memoryStream.ToArray();
                     }
                 }
-                else
-                {
-                    coupon.CouponPicture = null;
-                }
-
+                coupon.CouponPicture = photo;  
                 _context.Coupons.Add(coupon);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -112,7 +100,16 @@ namespace FastFood.Controllers
             {
                 return NotFound();
             }
-            return View(coupon);
+            CouponViewModel Model = new CouponViewModel
+            {
+                Id = coupon.Id,
+                Title = coupon.Title,
+                Type = coupon.Type,
+                Discount = coupon.Discount,
+                MinimumAmount = coupon.MinimumAmount,
+                IsActive = coupon.IsActive
+            };
+            return View(Model);
         }
 
         // POST: Coupons/Edit/5
@@ -120,15 +117,35 @@ namespace FastFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Type,Discount,MinimumAmount,CouponPicture,IsActive")] Coupon coupon)
+        public async Task<IActionResult> Edit(int id, CouponViewModel model)
         {
-            if (id != coupon.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var coupon = new Coupon
+                {   Id = id,
+                    Title = model.Title,
+                    Type = model.Type,
+                    Discount = model.Discount,
+                    MinimumAmount = model.MinimumAmount,
+                    IsActive = model.IsActive
+                };
+                var files = Request.Form.Files;
+                byte[] photo = null;
+                using (var fileStream = files[0].OpenReadStream())
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        fileStream.CopyTo(memoryStream);
+                        photo = memoryStream.ToArray();
+                    }
+                }
+                coupon.CouponPicture = photo;
+
                 try
                 {
                     _context.Update(coupon);
@@ -147,7 +164,7 @@ namespace FastFood.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(coupon);
+            return View(model);
         }
 
         // GET: Coupons/Delete/5
