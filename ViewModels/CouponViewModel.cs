@@ -20,6 +20,5 @@ namespace FastFood.ViewModels
         public IFormFile CouponPicture { get; set; } // For the uploaded file
 
         public bool IsActive { get; set; }
-        public string CouponPictureBase64 { get; set; }
     }
 }
