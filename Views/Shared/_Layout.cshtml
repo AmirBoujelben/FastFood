@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FastFood.styles.css" asp-append-version="true" />
+    <!-- Add Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
 </head>
 <body>
     <header>
@@ -43,10 +46,12 @@
                         }
                         @if (User.IsInRole("Customer"))
                         {
-                        <!-- Visible uniquement pour Customer -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Carts" asp-action="Index">Cart</a>
-                        </li>
+                            <!-- Visible uniquement pour Customer -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Carts" asp-action="Index">
+                                    <i class="fas fa-shopping-cart"></i> <!-- Cart icon -->
+                                </a>
+                            </li>
                         }
                         @if (User.IsInRole("Manager"))
                         {
