@@ -19,12 +19,20 @@ namespace FastFood.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
+            var items = _context.Items.Include(i => i.SubCategory).AsQueryable();
 
-            var applicationDbContext = _context.Items.Include(i => i.SubCategory);
-            return View(await applicationDbContext.ToListAsync());
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Convertir les deux côtés en minuscules pour comparer sans tenir compte de la casse
+                items = items.Where(i => i.Title.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            return View(await items.ToListAsync());
         }
+
+
         public async Task<IActionResult> Details(int Id)
         {
             var itemFromDb = await _context.Items.Include(i => i.SubCategory).Where(x=>x.Id==Id).FirstOrDefaultAsync();
