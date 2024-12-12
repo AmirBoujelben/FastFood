@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FastFood.Migrations
 {
     /// <inheritdoc />
-    public partial class initialSetup : Migration
+    public partial class items : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

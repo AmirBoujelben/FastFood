@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFood.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241211213206_initialSetup")]
-    partial class initialSetup
+    [Migration("20241211222325_items")]
+    partial class items
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
