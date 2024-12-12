@@ -4,27 +4,35 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h4 style="padding-top: 25px">@ViewData["Title"] SubCategory</h4>
+<hr />
 
-<div>
-    <h4>SubCategory</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Title)
-        </dd>
-    </dl>
+<div class="row justify-content-center" style="padding-top: 50px;">
+    <div class="col-md-4">
+        <!-- Conteneur stylisé pour les détails -->
+        <div class="border p-4 rounded">
+            <h5>SubCategory Details</h5>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.Category)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Category.Title)
+                </dd>
+            </dl>
+            <!-- Boutons d'action -->
+            <div class="text-center mt-4">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary" style="width: 100px;">Edit</a>
+                <a asp-action="Index" class="btn btn-secondary" style="width: 100px;">Back</a>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

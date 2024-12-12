@@ -2,44 +2,145 @@
 
 @{
     ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h4 class="mt-2">@ViewData["Title"]</h4>
+<hr />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Item</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SubCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubCategory.Id)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="container mt-4">
+
+    <h3 class="text-center">Are you sure you want to delete this?</h3>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <!-- Contenu de l'item à supprimer avec bordure et padding -->
+            <div class="border p-4 rounded">
+                <h4>Item Details</h4>
+                <hr />
+                <div class="row">
+                    <!-- Image de l'item -->
+                    <div class="col-sm-2 d-flex justify-content-start align-items-center">
+                        <div class="miniature-container">
+                            <img src="@Model.ImageUrl" class="circular-image" />
+                        </div>
+                    </div>
+                    <!-- Détails de l'item -->
+                    <div class="col-sm-10">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.Title)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.Title)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.Price)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.Price)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.SubCategory)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.SubCategory.Title)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Formulaire de suppression -->
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="text-center mt-4">
+                        <input type="submit" value="Delete" class="btn btn-danger" style="width: 120px;" />
+                        <span>|</span>
+                        <a asp-action="Index" class="btn btn-secondary" style="width: 120px;">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light gray background */
+        color: #343a40; /* Dark gray text */
+    }
+
+    h1, h3 {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .table {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .btn {
+        margin-right: 5px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn-danger {
+        width: 120px;
+    }
+
+    .btn-secondary {
+        width: 120px;
+    }
+
+    .border {
+        border: 1px solid #343a40; /* Dark border */
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    /* Style pour l'image */
+    .miniature-container {
+        width: 70px;
+        height: 70px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+    .circular-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        border-radius: 50%;
+    }
+
+    /* Adaptation pour l'item */
+    .fw-bold {
+        font-weight: bold;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+    }
+</style>
