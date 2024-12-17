@@ -8,6 +8,7 @@ namespace FastFood.Models
     {
         [Key]
         public int Id { get; set; }
+        [ValidateNever]
         public string ApplicationUserId { get; set; }
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
@@ -17,12 +18,12 @@ namespace FastFood.Models
         public DateTime DateOfPick { get; set; }
         public double SubTotal { get; set; }
         public double OrderTotal { get; set; }
-        public string CouponCode { get; set; }
-        public double CouponDis {  get; set; }
+        public string? CouponCode { get; set; }
+        public double? CouponDis {  get; set; }
 
-        public string TransId { get; set; }
-        public string OrderStatus { get; set; }
-        public string PaymentStatus { get; set; }
+        public string? TransId { get; set; }
+        public string? OrderStatus { get; set; }
+        public string? PaymentStatus { get; set; }
 
         public string Name {  get; set; }
         public string Phone { get; set; }

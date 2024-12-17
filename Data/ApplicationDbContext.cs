@@ -1,6 +1,7 @@
 ﻿using FastFood.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using FastFood.ViewModels;
 
 namespace FastFood.Data
 {
@@ -18,5 +19,6 @@ namespace FastFood.Data
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
+        public DbSet<FastFood.ViewModels.OrderDetailsViewModel> OrderDetailsViewModel { get; set; } = default!;
     }
 }

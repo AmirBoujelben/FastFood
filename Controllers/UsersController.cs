@@ -1,6 +1,7 @@
 ﻿using FastFood.Data;
 using FastFood.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,13 +10,16 @@ using System.Security.Claims;
 namespace FastFood.Controllers
 {
     [Authorize(Roles = "Admin")]
+
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -42,7 +46,7 @@ namespace FastFood.Controllers
         // POST: Users/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ApplicationUser user)
+        public async Task<IActionResult> Edit(string id, ApplicationUser user, string newRole)
         {
             if (id != user.Id)
             {
@@ -66,6 +70,17 @@ namespace FastFood.Controllers
                     existingUser.City = user.City;
                     existingUser.Address = user.Address;
                     existingUser.PostalCode = user.PostalCode;
+
+                    // Role management
+                    var userRoles = await _userManager.GetRolesAsync(existingUser);
+                    if (!string.IsNullOrEmpty(newRole) && !userRoles.Contains(newRole))
+                    {
+                        // Remove all existing roles
+                        await _userManager.RemoveFromRolesAsync(existingUser, userRoles);
+
+                        // Add the new role
+                        await _userManager.AddToRoleAsync(existingUser, newRole);
+                    }
 
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));

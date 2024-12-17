@@ -35,6 +35,20 @@
                 <input asp-for="PostalCode" class="form-control" />
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
+            <h3>Select a Role:</h3>
+            <div>
+                <input type="radio" id="admin" name="newRole" value="Admin" required />
+                <label for="admin">Admin</label>
+            </div>
+            <div>
+                <input type="radio" id="manager" name="newRole" value="Manager" />
+                <label for="manager">Manager</label>
+            </div>
+            <div>
+                <input type="radio" id="customer" name="newRole" value="Customer" />
+                <label for="customer">Customer</label>
+            </div>
+
             <div class="form-group mt-3">
                 <input type="submit" class="btn btn-primary" value="Save"/>
             </div>

@@ -9,6 +9,7 @@ using FastFood.Data;
 using FastFood.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using FastFood.ViewModels;
 
 namespace FastFood.Controllers
 {
@@ -21,8 +22,30 @@ namespace FastFood.Controllers
         {
             _context = context;
         }
+        [HttpGet]
+        public async Task<IActionResult> Summary()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-        // GET: Carts
+            var details = new CartOrderViewModel()
+            {
+                ListofCart = _context.Carts.Include(x => x.Item)
+                .Where(x => x.ApplicationUserId == claims.Value).ToList(),
+                OrderHeader = new OrderHeader()
+            };
+            details.OrderHeader.ApplicationUser = _context.ApplicationUsers
+                .Where(x => x.Id == claims.Value).FirstOrDefault();
+            details.OrderHeader.Name = details.OrderHeader.ApplicationUser.Name;
+            details.OrderHeader.Phone = details.OrderHeader.ApplicationUser.PhoneNumber;
+            details.OrderHeader.TimeOfPick = DateTime.Now.AddHours(1);
+            foreach(var cart in details.ListofCart)
+            {
+                details.OrderHeader.OrderTotal += (cart.Item.Price * cart.Count);
+            }
+
+            return View(details);
+        }
         // GET: Carts
         public async Task<IActionResult> Index()
         {

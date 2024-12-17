@@ -132,24 +132,14 @@ namespace FastFood.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    if (role=="Admin")
-                    {
-                        await _userManager.AddToRoleAsync(user, "Admin");
-                    }
-                    else
-                    {
-                        if (role=="Manager")
-                        {
-                            await _userManager.AddToRoleAsync(user, "Manager");
-                        }
-                        else
-                        {
-                            await _userManager.AddToRoleAsync(user, "Customer");
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
-                    }
-                    return RedirectToAction("Index", "Users", new {area = "Admin"});
+
+                    // Assign the Customer role directly
+                    await _userManager.AddToRoleAsync(user, "Customer");
+
+                    // Sign in the user
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
 
                     //var userId = await _userManager.GetUserIdAsync(user);
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

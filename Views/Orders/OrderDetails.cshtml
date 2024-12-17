@@ -1,0 +1,96 @@
+﻿@model FastFood.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "OrderDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container mt-4">
+    <h1>Order Header</h1>
+    <p><strong>Name:</strong> @Model.OrderHeader.Name</p>
+    <p><strong>Phone:</strong> @Model.OrderHeader.Phone</p>
+    <p><strong>Pickup Time:</strong> @Model.OrderHeader.TimeOfPick.ToString("f")</p>
+</div>
+<h4>Order Details</h4>
+<table class="table table-striped table-bordered rounded mt-4">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <tr>
+                <td class="align-middle">
+                    <div class="miniature-container me-3">
+                        <img src="@detail.Item.ImageUrl" class="circular-image" />
+                    </div>
+                </td>
+                <td>@detail.Name</td>
+                <td>@detail.Price.ToString("C")</td>
+                <td>@detail.Count</td>
+                <td>@(detail.Price * detail.Count)</td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+<h3>Total Amount: @Model.OrderHeader.OrderTotal.ToString("C")</h3>
+<div>
+    <a asp-action="Index" class="btn btn-sm btn-secondary">Back to List</a>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Fond gris clair */
+        color: #343a40; /* Texte gris foncé */
+    }
+
+    h4 {
+        font-weight: bold;
+    }
+
+    .table {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .btn {
+        margin-right: 5px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Miniature de produit */
+    .miniature-container {
+        width: 50px; /* Taille fixe pour la miniature */
+        height: 50px;
+        overflow: hidden;
+        border-radius: 50%; /* Transforme le conteneur en cercle */
+    }
+
+    .circular-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ajuste l'image pour remplir le conteneur */
+        border: 1px solid #ddd; /* Bordure légère pour l'esthétique */
+        border-radius: 50%; /* Transforme l'image en cercle */
+    }
+
+    .fw-bold {
+        font-weight: bold;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+    }
+</style>
